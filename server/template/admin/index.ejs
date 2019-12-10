@@ -54,13 +54,13 @@
     <div class="mengceng">
       <div class="mn_content">
        <div class="cuo">x</div>
-        <form action="<%=HTTP_ROOT%>/admin/sub" method="POST" enctype="multipart/form-data">
+        <form action="<%=HTTP_ROOT%>/admin/sub" method="POST" enctype="multipart/form-data" >
          <span style="margin-left:100px">姓名：</span><input type="text" name="name" > <br><br><span style="margin-left:100px">电话：</span><input type="text" name="phone">
          <p>标题：<input type="text" name="title"></p>
-         <p>描述：<textarea name="describe"></textarea></p>
+         <p>描述：<textarea name="describe" class="describe"></textarea></p>
          <p>上传图片<input type="file" name="src"></p>
-         <p>地址：<input type="text" name="address" placeholder="请写明具体位置"></p>
-         <p><input type="submit" ></p>
+         <p>地址：<input type="text" name="address" placeholder="请写明具体位置" class="address"></p>
+         <p><input type="submit" class="userSub"></p>
         </form>
       </div>
     </div>

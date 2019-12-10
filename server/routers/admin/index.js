@@ -56,11 +56,11 @@ router.post('/login',async ctx=>{
     }    
     
     if(!findAdmin(username)){
-        ctx.body = "bcz";
+        ctx.body = "用户名不存在";
         //ctx.redirect(`${HTTP_ROOT}/admin/login?errmsg=${encodeURIComponent('用户不存在')}`)
     }else if(findAdmin(username).password!=common.md5(password)){
        // ctx.redirect(`${HTTP_ROOT}/admin/login?errmsg=${encodeURIComponent('密码错误')}`)
-       ctx.body = 'cw';
+       ctx.body = '密码错误';
     }else{
 
         ctx.session['admin'] = username;

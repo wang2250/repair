@@ -9,8 +9,9 @@ let sousuo  = document.querySelector('.sousuo');
 let number = zhanshi.classList[1];
 let HTTP_ROOT = 'http://localhost:8080';
 let nu  =zhanshi.children.length;
-
-
+let userSub = document.querySelector('.userSub');
+let describe = document.querySelector('.describe');
+let address = document.querySelector('.address');
 subBtn.onclick = ()=>{
     mengceng.style.display = 'block';
 }
@@ -96,4 +97,11 @@ function ajax (obj) {
       if(obj.time){
           timer = setTimeout(xhr.abort,obj.time)
       }
-    }
+}
+
+userSub.onclick = ()=>{
+  if(describe.value == '' || address.value == ''){
+    alert('信息填写不完整');
+     return false;
+  }
+}
