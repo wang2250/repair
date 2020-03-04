@@ -3,67 +3,71 @@ const fs = require('fs');
 const path = require('path');
 const common = require('../../libs/common');
 const static = require('koa-static');
+const request = require('request');
+const https=require("https");
 let router = new Router();
+var loction = 'aaa' ;
 
- router.get('',async ctx=>{
-    
-     let {HTTP_ROOT} = ctx.config;
-     let data = await ctx.db.query(`SELECT * FROM admin_table`);
-     let number = data.length;
+router.get('', async ctx=>{
  
-     data.reverse();
-         await ctx.render('admin/index',{
-        HTTP_ROOT,
-        data:data,
-        number:number
-    });
+    await ctx.render('index',{
+        
+      });
+
+
+https.get("https://apis.map.qq.com/ws/location/v1/ip?key=UGNBZ-AIR6D-2DV4Y-HVIHB-JI4OK-XBBCK",function(data){
+    var str="";
+    data.on("data",function(chunk){
+        str+=chunk;//监听数据响应，拼接数据片段
+    })
+     data.on("end",function(){
+         var  loc = JSON.parse(str.toString());
+          loction = loc.result.ad_info.city +loc.result.ad_info.district;
+          
+          
+    })
+})
+
+
+  
+
  });
 
-router.all('found',async ctx=>{
+router.get('found',async ctx=>{
    
-let {content} = ctx.query;
-let {HTTP_ROOT} = ctx.config;
-try{
-    let state =   await ctx.db.query(` SELECT * FROM  admin_table  WHERE onA=${content}`);
-    state = state[0];
 
-   await ctx.render('admin/zt',{
-     data:state,
-     HTTP_ROOT,
-      ret:'yh'
-    })
 
-}catch(e){
-   ctx.body = '未找到数据';
-}
  
- 
+ ctx.body = {
+     "code":1,
+     "loct":loction
+ }
   
   
 });
-router.get('cuidan',async ctx=>{
-    let {num} = ctx.query;
-    try{
-        await ctx.db.query(`UPDATE  admin_table  SET cd='催单' WHERE  onA=${num}`);
-        ctx.body = '成功';
-      }catch(e){
-        ctx.body = '失败';
-      }
-})
-router.get('msg:id',async ctx=>{
- try{
-    let {txt} = ctx.query;
-    let {id} = ctx.params;
-        id = id.slice(1);
-    let datas =  await ctx.db.query(`SELECT * FROM admin_table WHERE onA=${id}`);
-        datas = datas[0];
-    await ctx.db.query(`INSERT INTO msg_table (name,content,onA,adr) VALUES(?,?,?,?)`,[datas.name,txt,id,datas.address]);
-    await ctx.db.query(`UPDATE  admin_table  SET mssg='true' WHERE  onA=${id}`);
-    ctx.body = '评价成功！感谢您的支持';
- }catch(e){
-     console.log(e)
-     ctx.body = "评价失败！"
- }
+// router.get('cuidan',async ctx=>{
+//     let {num} = ctx.query;
+//     try{
+//         await ctx.db.query(`UPDATE  admin_table  SET cd='催单' WHERE  onA=${num}`);
+//         ctx.body = '成功';
+//       }catch(e){
+//         ctx.body = '失败';
+//       }
+// })
+// router.get('msg:id',async ctx=>{
+//  try{
+//     let {txt} = ctx.query;
+//     let {id} = ctx.params;
+//         id = id.slice(1);
+//     let datas =  await ctx.db.query(`SELECT * FROM admin_table WHERE onA=${id}`);
+//         datas = datas[0];
+//     await ctx.db.query(`INSERT INTO msg_table (name,content,onA,adr) VALUES(?,?,?,?)`,[datas.name,txt,id,datas.address]);
+//     await ctx.db.query(`UPDATE  admin_table  SET mssg='true' WHERE  onA=${id}`);
+//     ctx.body = '评价成功！感谢您的支持';
+//  }catch(e){
+//      console.log(e)
+//      ctx.body = "评价失败！"
+//  }
 
-})
-module.exports = router.routes();
+// })
+ module.exports = router.routes();
